@@ -1,0 +1,276 @@
+urls:
+  - category: "中文書即時榜"
+    url: "https://www.books.com.tw/web/sys_tdrntb/books/"
+    frequency: "hourly"
+
+  - category: "動漫/輕小說即時榜"
+    url: "https://www.books.com.tw/web/sys_tdrntb/bookssub1516/"
+    frequency: "hourly"
+
+  - category: "中文書暢銷預購榜"
+    url: "https://www.books.com.tw/web/sys_pretopb/books/"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_總榜"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/?attribute=7&loc=P_0002_001"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_文學小說"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/01/?attribute=7&loc=P_0002_002"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_商業理財"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/02/?attribute=7&loc=P_0002_003"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_藝術設計"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/03/?attribute=7&loc=P_0002_004"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_人文社科"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/04/?attribute=7&loc=P_0002_005"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_心理勵志"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/07/?attribute=7&loc=P_0002_006"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_宗教命理"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/12/?attribute=7&loc=P_0002_007"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_自然科普"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/06/?attribute=7&loc=P_0002_008"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_醫療保健"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/08/?attribute=7&loc=P_0002_009"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_飲食"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/09/?attribute=7&loc=P_0002_010"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_生活風格"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/10/?attribute=7&loc=P_0002_011"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_旅遊"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/11/?attribute=7&loc=P_0002_012"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_童書/青少年文學"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/14/?attribute=7&loc=P_0002_013"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_國中小參考書"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/24/?attribute=7&loc=P_0002_014"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_親子教養"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/13/?attribute=7&loc=P_0002_015"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_影視偶像"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/22/?attribute=7&loc=P_0002_016"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_輕小說"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/15/?attribute=7&loc=P_0002_017"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_漫畫/圖文書"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/16/?attribute=7&loc=P_0002_018"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_語言學習"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/17/?attribute=7&loc=P_0002_019"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_考試用書"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/18/?attribute=7&loc=P_0002_020"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_電腦資訊"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/19/?attribute=7&loc=P_0002_021"
+    frequency: "daily"
+
+  - category: "7日暢銷榜_專業/教科書/政府出版品"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/20/?attribute=7&loc=P_0002_022"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_總榜"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/?loc=P_0002_001"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_文學小說"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/01/?loc=P_0002_002"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_商業理財"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/02/?loc=P_0002_003"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_藝術設計"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/03/?loc=P_0002_004"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_人文社科"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/04/?loc=P_0002_005"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_心理勵志"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/07/?loc=P_0002_006"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_宗教命理"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/12/?loc=P_0002_007"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_自然科普"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/06/?loc=P_0002_008"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_醫療保健"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/08/?loc=P_0002_009"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_飲食"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/09/?loc=P_0002_010"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_生活風格"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/10/?loc=P_0002_011"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_旅遊"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/11/?loc=P_0002_012"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_童書/青少年文學"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/14/?loc=P_0002_013"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_國中小參考書"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/24/?loc=P_0002_014"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_親子教養"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/13/?loc=P_0002_015"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_影視偶像"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/22/?loc=P_0002_016"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_輕小說"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/15/?loc=P_0002_017"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_漫畫/圖文書"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/16/?loc=P_0002_018"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_語言學習"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/17/?loc=P_0002_019"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_考試用書"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/18/?loc=P_0002_020"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_電腦資訊"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/19/?loc=P_0002_021"
+    frequency: "daily"
+
+  - category: "30日暢銷榜_專業/教科書/政府出版品"
+    url: "https://www.books.com.tw/web/sys_saletopb/books/20/?loc=P_0002_022"
+    frequency: "daily"
+
+  - category: "新書榜_總榜"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/?loc=P_0002_001"
+    frequency: "daily"
+
+  - category: "新書榜_文學小說"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/01/?loc=P_0002_002"
+    frequency: "daily"
+
+  - category: "新書榜_商業理財"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/02/?loc=P_0002_003"
+    frequency: "daily"
+
+  - category: "新書榜_藝術設計"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/03/?loc=P_0002_004"
+    frequency: "daily"
+
+  - category: "新書榜_人文社科"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/04/?loc=P_0002_005"
+    frequency: "daily"
+
+  - category: "新書榜_心理勵志"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/07/?loc=P_0002_006"
+    frequency: "daily"
+
+  - category: "新書榜_宗教命理"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/12/?loc=P_0002_007"
+    frequency: "daily"
+
+  - category: "新書榜_自然科普"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/06/?loc=P_0002_008"
+    frequency: "daily"
+
+  - category: "新書榜_醫療保健"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/08/?loc=P_0002_009"
+    frequency: "daily"
+
+  - category: "新書榜_飲食"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/09/?loc=P_0002_010"
+    frequency: "daily"
+
+  - category: "新書榜_生活風格"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/10/?loc=P_0002_011"
+    frequency: "daily"
+
+  - category: "新書榜_旅遊"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/11/?loc=P_0002_012"
+    frequency: "daily"
+
+  - category: "新書榜_童書/青少年文學"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/14/?loc=P_0002_013"
+    frequency: "daily"
+
+  - category: "新書榜_國中小參考書"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/24/?loc=P_0002_014"
+    frequency: "daily"
+
+  - category: "新書榜_親子教養"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/13/?loc=P_0002_015"
+    frequency: "daily"
+
+  - category: "新書榜_影視偶像"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/22/?loc=P_0002_016"
+    frequency: "daily"
+
+  - category: "新書榜_輕小說"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/15/?loc=P_0002_017"
+    frequency: "daily"
+
+  - category: "新書榜_漫畫/圖文書"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/16/?loc=P_0002_018"
+    frequency: "daily"
+
+  - category: "新書榜_語言學習"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/17/?loc=P_0002_019"
+    frequency: "daily"
+
+  - category: "新書榜_考試用書"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/18/?loc=P_0002_020"
+    frequency: "daily"
+
+  - category: "新書榜_電腦資訊"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/19/?loc=P_0002_021"
+    frequency: "daily"
+
+  - category: "新書榜_專業/教科書/政府出版品"
+    url: "https://www.books.com.tw/web/sys_newtopb/books/20/?loc=P_0002_022"
+    frequency: "daily"

@@ -16,7 +16,7 @@ categories = []
 # 找到所有分類區塊
 for category_div in soup.find_all('div', class_='type02_s004 clearfix'):
     # 提取第一層分類名稱和連結
-    main_category = category_div.find('h4').get_text(strip=True)
+    main_category = category_div.find('h4').get_text(strip=True).replace('/', '_')
     main_link = category_div.find('h4').find('a')['href']
 
     # 初始化主分類字典
@@ -30,7 +30,7 @@ for category_div in soup.find_all('div', class_='type02_s004 clearfix'):
     for row in category_div.find_all('tr'):
         subcategory = row.find('h5')
         if subcategory:
-            subcategory_name = subcategory.get_text(strip=True)
+            subcategory_name = subcategory.get_text(strip=True).replace('/', '_')
             subcategory_link = subcategory.find('a')['href']
             subcategory_dict = {
                 'name': subcategory_name,
@@ -44,7 +44,7 @@ for category_div in soup.find_all('div', class_='type02_s004 clearfix'):
                 # 提取所有包含<a>標籤的<li>元素
                 subcategory_dict['subcategories'] = [
                     {
-                        'name': li.get_text(strip=True),
+                        'name': li.get_text(strip=True).replace('/', '_'),
                         'link': li.find('a')['href']
                     }
                     for li in ul_element.find_all('li')
@@ -52,7 +52,6 @@ for category_div in soup.find_all('div', class_='type02_s004 clearfix'):
                 ]
 
             main_category_dict['subcategories'].append(subcategory_dict)
-
 
     categories.append(main_category_dict)
 

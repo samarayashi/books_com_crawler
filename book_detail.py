@@ -9,12 +9,10 @@ import random
 
 class BookDetailScraper:
     
-    def __init__(self, base_url):
-        self.base_url = base_url
-        self.headers = self._get_headers()
+    def __init__(self):
         self.session = requests.Session()  # 使用Session來維持Cookies
+        self.headers = self._get_headers()
         self._setup_logging()
-        self.soup = self._get_soup()
 
     def _get_headers(self):
         """獲取隨機User-Agent"""
@@ -25,26 +23,30 @@ class BookDetailScraper:
             'Accept-Language': 'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7',
             'Referer': 'https://www.books.com.tw',
         }
+
     def _setup_logging(self):
         """設置日誌"""
         logging.basicConfig(
-            filename=datetime.now().strftime('%Y%m%d') + '_book_bestseller.log',
+            filename=datetime.now().strftime('%Y%m%d') + '_book_detail.log',
             level=logging.DEBUG,
             format='%(asctime)s - %(levelname)s - %(message)s'
         )
     
+    def set_url(self, url):
+        """設定新的目標 URL 並取得解析的 BeautifulSoup 物件"""
+        self.url = url
+        self.soup = self._get_soup()
+
     def _get_soup(self):
         # 隨機延遲，模擬人類行為
         time.sleep(random.uniform(1, 3))
 
         # 更新headers中的User-Agent
         self.headers['User-Agent'] = UserAgent().random
-        response = self.session.get(self.base_url, headers=self.headers, timeout=10)
+        response = self.session.get(self.url, headers=self.headers, timeout=10)
         response.raise_for_status()
 
-        soup = BeautifulSoup(response.text, 'html.parser')
-        
-        return soup
+        return BeautifulSoup(response.text, 'html.parser')
     
     def extract_basic_info(self):
         """提取基本書籍資料"""
@@ -52,6 +54,7 @@ class BookDetailScraper:
             info_section = self.soup.find('div', class_='type02_p003 clearfix')
             if not info_section:
                 logging.error("無法找到基本資訊區塊")
+                logging.debug(self.soup)
                 return {}
 
             info_list = info_section.find('ul')
@@ -133,17 +136,25 @@ class BookDetailScraper:
         detailed_info = self.extract_detailed_info()
         
         # 合併所有資訊
-        book_data = {**basic_info, **detailed_info}
-        return book_data
+        return {**basic_info, **detailed_info}
 
 def main():
-    # 初始化爬取器
-    scraper = BookDetailScraper(target_url)    
-    # 獲取書籍資料
-    book_data = scraper.get_book_data()
+    target_urls = [
+        "https://www.books.com.tw/products/0011001522?sloc=main",
+        "https://www.books.com.tw/products/0010922997?sloc=ms2_6",
+        # ... 其他目標 URL ...
+    ]
     
-    # 輸出或保存資料
-    print(json.dumps(book_data, ensure_ascii=False, indent=2))
+    scraper = BookDetailScraper()
+    all_books_data = []
+
+    for url in target_urls:
+        scraper.set_url(url)
+        book_data = scraper.get_book_data()
+        all_books_data.append(book_data)
+    
+    # 輸出或保存所有資料
+    print(json.dumps(all_books_data, ensure_ascii=False, indent=2))
 
 if __name__ == "__main__":
     main()

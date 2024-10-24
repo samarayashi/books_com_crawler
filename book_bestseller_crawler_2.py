@@ -30,7 +30,7 @@ class BooksCrawler:
     def setup_logging(self):
         """設置日誌"""
         logging.basicConfig(
-            filename='crawler.log',
+            filename = datetime.now().strftime('%Y%m%d') + '_book_bestseller.log',
             level=logging.DEBUG,
             format='%(asctime)s - %(levelname)s - %(message)s'
         )
@@ -45,28 +45,6 @@ class BooksCrawler:
         except Exception as e:
             logging.error(f"提取書籍ID時出錯: {str(e)}")
             return None
-
-    def _extract_price(self, price_text):
-        """從價格文字中提取數字"""
-        try:
-            # 移除所有空白字符
-            price_text = ''.join(price_text.split())
-            
-            if '折' in price_text:
-                # 處理折扣+價格格式: 77折400元
-                discount_part, price_part = price_text.split('折')
-                price = price_part.replace('元', '').strip()
-                discount = discount_part
-            else:
-                # 處理純價格格式: 599元
-                price = price_text.replace('元', '').strip()
-                discount = 100  # 無折扣時設為100
-                
-            # 提取折扣和價格
-            return int(discount), int(price)
-        except Exception as e:
-            logging.error(f"提取價格時出錯: {str(e)}")
-            return None, None
 
     def get_bestsellers(self):
         """爬取暢銷榜資料"""
@@ -121,14 +99,20 @@ class BooksCrawler:
                         author = author_elem.find('a').text.strip()
                     else:
                         # 如果 A 版的 'a' 元素不存在，則嘗試直接查找 'li' 中的文本 (B 版)
-                        author = author_elem.text.strip() if author_elem else "未知"
+                        author = author_elem.text.replace('作者：', '').strip() if author_elem else "未知"
                     
-                    # 獲取價格資訊
-                    if price_elem:
-                        price_text = price_elem.text.replace('優惠價：', '').replace('折優惠價', '').strip()
-                        discount, price = self._extract_price(price_text)
+                    # 獲取價格、折扣資訊
+                    if is_type02_bd_a:
+                        # A 版的價格解析
+                        if price_elem:
+                            discount = price_elem.find('b').text.strip() if price_elem.find('b') else "未知"
+                            price = price_elem.find_all('b')[-1].text.strip() if price_elem.find_all('b') else "未知"
                     else:
-                        discount, price = None, None
+                        # B 版的價格解析
+                        if price_elem:
+                            discount = price_elem.find('span').text.replace('折優惠價', '').strip() if price_elem.find('span') else "未知"
+                            price = price_elem.find('b').text.strip() if price_elem.find('b') else "未知"
+
                     
                     # 提取書籍ID
                     book_id = self._extract_book_id(url)

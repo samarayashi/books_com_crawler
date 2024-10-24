@@ -11,6 +11,7 @@ import pandas as pd
 from urllib.parse import urljoin
 from fake_useragent import UserAgent
 from datetime import datetime
+from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 
 class BooksCrawler:
     def __init__(self, category, base_url):
@@ -78,17 +79,6 @@ class BooksCrawler:
             book['product_name'] = title_link.text.strip()
             book['url'] = title_link['href']
             
-        # 解析作者和出版社資訊
-        info_li = item_div.find('li', class_='info')
-        if info_li:
-            book['author'] = info_li.find('a').text.strip() if info_li.find('a') else ''
-            book['publisher'] = info_li.find_all('a')[-1].text.strip() if len(info_li.find_all('a')) > 1 else ''
-            
-        # 解析價格
-        price_strong = item_div.find('div', class_='price_box').find('strong')
-        if price_strong:
-            book['price'] = price_strong.text.strip()
-            
         return book
 
     def crawl_page(self, url: str) -> Tuple[List[Dict[str, str]], Dict[str, str], int]:
@@ -129,15 +119,23 @@ class BooksCrawler:
         books, metadata, total_pages = self.crawl_page(base_url)
         all_books.extend(books)
         category_metadata = metadata
-        
+
+        # 解析 base_url 以處理頁碼參數
+        parsed_url = urlparse(base_url)
+        query_params = parse_qs(parsed_url.query)
+
         # 爬取剩餘頁面
         for page in range(2, total_pages + 1):
-            page_url = f"{base_url}?page={page}"
+            query_params['page'] = [str(page)]  # 更新頁碼參數
+            new_query = urlencode(query_params, doseq=True)  # 將參數重新編碼為字串
+            page_url = urlunparse(parsed_url._replace(query=new_query))  # 建立新的 URL
+            
             logging.info(f"正在爬取第 {page} 頁，共 {total_pages} 頁")
             books, _, _ = self.crawl_page(page_url)
             all_books.extend(books)
             
         return all_books, category_metadata
+
 
     def save_to_json(self, data: List[Dict[str, str]], metadata: Dict[str, str], filename: str):
         """將資料保存為JSON格式"""

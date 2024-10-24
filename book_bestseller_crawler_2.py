@@ -15,8 +15,9 @@ class BooksCrawler:
         self.category = category
         self.base_url = base_url
         self.headers = self._get_headers()
+        self.session = requests.Session()  # 使用Session來維持Cookies
         self.setup_logging()
-        
+
     def _get_headers(self):
         """獲取隨機User-Agent"""
         ua = UserAgent()
@@ -26,16 +27,15 @@ class BooksCrawler:
             'Accept-Language': 'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7',
             'Referer': 'https://www.books.com.tw',
         }
-    
+
     def setup_logging(self):
         """設置日誌"""
         logging.basicConfig(
             filename='crawler.log',
-            # level=logging.INFO,
             level=logging.DEBUG,
             format='%(asctime)s - %(levelname)s - %(message)s'
         )
-    
+
     def _extract_book_id(self, url):
         """從URL中提取書籍ID"""
         try:
@@ -46,7 +46,7 @@ class BooksCrawler:
         except Exception as e:
             logging.error(f"提取書籍ID時出錯: {str(e)}")
             return None
-    
+
     def _extract_price(self, price_text):
         """從價格文字中提取數字"""
         print(price_text)
@@ -69,17 +69,17 @@ class BooksCrawler:
         except Exception as e:
             logging.error(f"提取價格時出錯: {str(e)}")
             return None, None
-    
+
     def get_bestsellers(self):
         """爬取暢銷榜資料"""
         try:
-            # 加入隨機延遲，模擬人類行為
+            # 隨機延遲，模擬人類行為
             time.sleep(random.uniform(1, 3))
 
             # 更新headers中的User-Agent
             self.headers['User-Agent'] = UserAgent().random
 
-            response = requests.get(self.base_url, headers=self.headers, timeout=10)
+            response = self.session.get(self.base_url, headers=self.headers, timeout=10)
             response.raise_for_status()
 
             soup = BeautifulSoup(response.text, 'html.parser')

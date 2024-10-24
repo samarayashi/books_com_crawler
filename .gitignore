@@ -164,3 +164,6 @@ cython_debug/
 # --------------
 # 本地資料庫
 *.db
+
+# debugger
+launch.json

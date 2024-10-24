@@ -7,8 +7,7 @@ import random
 import logging
 from fake_useragent import UserAgent
 import json
-import ymal
-
+import yaml  
 
 class BooksCrawler:
     def __init__(self, category, base_url):
@@ -49,7 +48,6 @@ class BooksCrawler:
 
     def _extract_price(self, price_text):
         """從價格文字中提取數字"""
-        print(price_text)
         try:
             # 移除所有空白字符
             price_text = ''.join(price_text.split())
@@ -78,7 +76,6 @@ class BooksCrawler:
 
             # 更新headers中的User-Agent
             self.headers['User-Agent'] = UserAgent().random
-
             response = self.session.get(self.base_url, headers=self.headers, timeout=10)
             response.raise_for_status()
 
@@ -168,29 +165,30 @@ class BooksCrawler:
             return []
 
     def save_to_csv(self, data, filename=None):
+        """將數據保存為 CSV 文件"""
         if not filename:
             timestamp = datetime.now().strftime('%Y%m%d_%H%M')
             filename = f'{self.category}_bestsellers_{timestamp}.csv'
-        # 其他內容保持不變
+        
+        try:
+            df = pd.DataFrame(data)
+            df.to_csv(filename, index=False, encoding='utf-8-sig')
+            logging.info(f"數據已保存到 {filename}")
+        except Exception as e:
+            logging.error(f"保存CSV文件時出錯: {str(e)}")
 
     def save_to_json(self, data, filename=None):
+        """將數據保存為 JSON 文件"""
         if not filename:
             timestamp = datetime.now().strftime('%Y%m%d_%H%M')
             filename = f'{self.category}_bestsellers_{timestamp}.json'
-            """將數據保存為JSON文件"""
-            if not filename:
-                timestamp = datetime.now().strftime('%Y%m%d_%H%M')
-                filename = f'bestsellers_{timestamp}.json'
-            
-            try:
-                with open(filename, 'w', encoding='utf-8') as f:
-                    json.dump(data, f, ensure_ascii=False, indent=2)
-                logging.info(f"數據已保存到 {filename}")
-                return True
-            except Exception as e:
-                logging.error(f"保存JSON文件時出錯: {str(e)}")
-                return False
-
+        
+        try:
+            with open(filename, 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+            logging.info(f"數據已保存到 {filename}")
+        except Exception as e:
+            logging.error(f"保存JSON文件時出錯: {str(e)}")
 
 def read_yaml_config(filename):
     """讀取 YAML 配置文件"""
@@ -211,7 +209,7 @@ def scrape_category(category, url):
 
 def main():
     # 讀取 YAML 文件
-    config = read_yaml_config('config.yaml')  # 假設你的 YAML 文件名為 config.yaml
+    config = read_yaml_config('book_bestseller_scraper_config.yaml')
     
     for item in config['urls']:
         category = item['category']

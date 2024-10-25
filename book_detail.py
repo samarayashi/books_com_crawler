@@ -55,17 +55,23 @@ class BookDetailScraper:
             # 書名
             book_name = self.soup.select_one('div.grid_10 h1').text.strip()
             
+            # 原文書名:此區塊有可能為空
+            ori_book_name = self.soup.select_one('div.grid_10 h2')
+            ori_book_name = ori_book_name.text.strip() if ori_book_name else None
+
             # 在type02_p003區塊中尋找基本資訊
             info_div = self.soup.select_one('div.type02_p003')
             
             # 初始化資料字典
             basic_info = {
                 'book_name': book_name,
-                'author': '',
-                'translator': '',
-                'publisher': '',
-                'publish_date': '',
-                'language': ''
+                'ori_book_name': ori_book_name,
+                'author': None,
+                'ori_author': None,
+                'translator': None,
+                'publisher': None,
+                'publish_date': None,
+                'language': None
             }
             
             # 遍歷所有li元素
@@ -77,6 +83,10 @@ class BookDetailScraper:
                     author_link = li.select_one('a[href*="search/query/key/"]')
                     if author_link:
                         basic_info['author'] = author_link.text.strip()
+                elif '作者原文' in text:
+                    ori_author_link = li.select_one('a[href*="search/query/key/"]')
+                    if ori_author_link:
+                        basic_info['ori_author'] = author_link.text.strip()
                 elif '譯者' in text:
                     translator_link = li.select_one('a[href*="search/query/key/"]')
                     if translator_link:

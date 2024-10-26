@@ -40,81 +40,104 @@ class BooksCrawler:
         )
 
     def get_category_metadata(self, soup: BeautifulSoup) -> Dict[str, str]:
-        """解析頁面中的分類資訊"""
+        """解析頁面中的分類資訊，兼容Ａ版與Ｂ版"""
+        # Ａ版：使用 <ul id='breadcrumb-trail'>
         breadcrumb = soup.find('ul', id='breadcrumb-trail')
-        if not breadcrumb:
-            return {}
+        # Ｂ版：使用 <div class='breadcrumb_bar'>
+        breadcrumb_bar = soup.find('div', class_='breadcrumb_bar')
+        metadata = []
         
-        metadata = {}
-        items = breadcrumb.find_all('li')
-        for i, item in enumerate(items, 1):
-            meta_name = item.find('meta', property='name')
-            if meta_name:
-                metadata[f'level_{i}'] = meta_name['content']
-        
+        # A
+        if breadcrumb:
+            items = breadcrumb.find_all('li')
+            for item in items:
+                meta_name = item.find('meta', property='name')
+                if meta_name:
+                    metadata.append(meta_name['content'])
+        # B
+        if breadcrumb_bar:
+            elements = breadcrumb_bar.find_all(['h3'])
+            for element in elements:
+                meta_name = element.find('meta', property='name')
+                if meta_name:
+                    metadata.append(meta_name['content'])
+                    
         return metadata
 
+
     def get_total_pages(self, soup: BeautifulSoup) -> int:
-        """解析總頁數"""
+        """解析總頁數，兼容Ａ版與Ｂ版"""
+        # Ａ版：使用 <div class='cnt_page'>
         page_div = soup.find('div', class_='cnt_page')
-        if not page_div:
-            return 1
-        
-        page_span = page_div.find('span')
-        if page_span:
+        if page_div:
+            page_span = page_div.find('span')
+            if page_span:
+                try:
+                    return int(page_span.text)
+                except ValueError:
+                    logging.warning("無法解析總頁數，使用預設值 1")
+                    return 1
+
+        # Ｂ版：使用 <div class='m_mod mm_031 clearfix'>
+        page_select = soup.find('div', class_='m_mod mm_031 clearfix')
+        if page_select:
             try:
-                return int(page_span.text)
-            except ValueError:
+                total_pages = page_select.find('span').text
+                return int(total_pages)
+            except (ValueError, AttributeError):
                 logging.warning("無法解析總頁數，使用預設值 1")
                 return 1
+
         return 1
 
     def parse_book_info(self, item_div: BeautifulSoup) -> Dict[str, str]:
         """解析單本書的資訊"""
         book = {}
-        
-        # 解析書名和URL
-        title_link = item_div.find('h4').find('a')
-        if title_link:
-            book['product_name'] = title_link.text.strip()
-            book['url'] = title_link['href']
-            
+        title_link_a = item_div.find('h4').find('a')
+        if title_link_a:
+            book['product_name'] = title_link_a.text.strip()
+            book['url'] = title_link_a['href']
+        # 返回書籍資訊
         return book
 
-    def crawl_page(self, url: str) -> Tuple[List[Dict[str, str]], Dict[str, str], int]:
+    def crawl_page(self, url: str) -> Tuple[List[Dict[str, str]]]:
         """爬取單一頁面的資訊"""
         time.sleep(random.uniform(1, 3))  # 隨機延遲，避免被偵測
         
-        try:
-            response = self.session.get(url, headers=self.headers)
-            response.raise_for_status()
-            soup = BeautifulSoup(response.text, 'html.parser')
-            
-            # 獲取分類資訊
-            category_metadata = self.get_category_metadata(soup)
-            
-            # 獲取總頁數
-            total_pages = self.get_total_pages(soup)
-            
-            # 解析書籍資訊
-            books = []
-            book_items = soup.find_all('div', class_='item')
-            for item in book_items:
-                book_info = self.parse_book_info(item)
-                if book_info:
-                    books.append(book_info)
-            
-            return books, category_metadata, total_pages
-            
-        except Exception as e:
-            logging.error(f"爬取頁面時發生錯誤: {str(e)}")
-            return [], {}, 1
+        response = self.session.get(url, headers=self.headers)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        if 
+        # 獲取分類資訊
+        category_metadata = self.get_category_metadata(soup)
+        
+        # 獲取總頁數
+        total_pages = self.get_total_pages(soup)
+        
+        # 解析書籍資訊
+        books = []
+        book_items = soup.find_all('div', class_='item')  # Ａ版
+        if not book_items:
+            book_items = soup.find_all('li', class_='item')  # Ｂ版
+        for item in book_items:
+            book_info = self.parse_book_info(item)
+            if book_info:
+                books.append(book_info)
+        
+        return books, category_metadata, total_pages
+        
+        
+        # try:
+ 
+        # except Exception as e:
+        #     logging.error(f"爬取頁面時發生錯誤: {str(e)}")
+        #     return [], {}, 1
+
 
     def crawl_all_pages(self, base_url: str) -> Tuple[List[Dict[str, str]], Dict[str, str]]:
         """爬取所有頁面的資訊"""
-        all_books = []
-        category_metadata = {}
-        
+        all_books = []        
         # 爬取第一頁並獲取總頁數
         books, metadata, total_pages = self.crawl_page(base_url)
         all_books.extend(books)
@@ -150,11 +173,7 @@ class BooksCrawler:
         logging.info(f"資料已保存至 {filename}")
 
     def save_to_csv(self, data: List[Dict[str, str]], metadata: Dict[str, str], filename: str):
-        """將資料保存為CSV格式"""
-        # 將metadata加入每一筆書籍資料中
-        for book in data:
-            book.update(metadata)
-            
+        """將資料保存為CSV格式"""            
         df = pd.DataFrame(data)
         df.to_csv(filename, index=False, encoding='utf-8-sig')
         
@@ -168,15 +187,16 @@ class BooksCrawler:
         Path(output_dir).mkdir(parents=True, exist_ok=True)
         
         # 爬取資料
-        books, metadata = self.crawl_all_pages(url)
+        books, category_names = self.crawl_all_pages(url)
         
         # 建立檔名
-        category_name = "_".join(metadata.values())
+        print(category_names)
+        category_name = category_names[-1].replace('/', '_')
         base_filename = f"{category_name}_{time.strftime('%Y%m%d_%H%M%S')}"
         
         # 保存資料
-        self.save_to_json(books, metadata, f"{output_dir}/{base_filename}.json")
-        self.save_to_csv(books, metadata, f"{output_dir}/{base_filename}.csv")
+        self.save_to_json(books, category_names, f"{output_dir}/{base_filename}.json")
+        self.save_to_csv(books, category_names, f"{output_dir}/{base_filename}.csv")
         
         logging.info("爬蟲完成")
 
@@ -189,7 +209,7 @@ def main():
         for subcategory in category['subcategories']:
             base_url = subcategory['link']
             crawler = BooksCrawler(subcategory['name'], base_url)
-            crawler.crawl_and_save(base_url)
+            crawler.crawl_and_save(base_url, "output/booklist")
 
 if __name__ == "__main__":
     main()

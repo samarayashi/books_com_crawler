@@ -100,7 +100,7 @@ class BooksCrawler:
         # 返回書籍資訊
         return book
 
-    def crawl_page(self, url: str) -> Tuple[List[Dict[str, str]]]:
+    def crawl_page(self, url: str, first_page: bool = False) -> Tuple[List[Dict[str, str]]]:
         """爬取單一頁面的資訊"""
         time.sleep(random.uniform(1, 3))  # 隨機延遲，避免被偵測
         
@@ -108,12 +108,13 @@ class BooksCrawler:
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        if 
-        # 獲取分類資訊
-        category_metadata = self.get_category_metadata(soup)
-        
-        # 獲取總頁數
-        total_pages = self.get_total_pages(soup)
+        category_metadata, total_pages = None, None
+        if first_page:
+            # 獲取分類資訊
+            category_metadata = self.get_category_metadata(soup)
+            
+            # 獲取總頁數
+            total_pages = self.get_total_pages(soup)
         
         # 解析書籍資訊
         books = []
@@ -139,7 +140,7 @@ class BooksCrawler:
         """爬取所有頁面的資訊"""
         all_books = []        
         # 爬取第一頁並獲取總頁數
-        books, metadata, total_pages = self.crawl_page(base_url)
+        books, metadata, total_pages = self.crawl_page(base_url, first_page=True)
         all_books.extend(books)
         category_metadata = metadata
 

@@ -31,12 +31,7 @@ class BookDetailScraper:
             level=logging.DEBUG,
             format='%(asctime)s - %(levelname)s - %(message)s'
         )
-    
-    def set_url(self, url):
-        """設定新的目標 URL 並取得解析的 BeautifulSoup 物件"""
-        self.url = url
-        self.soup = self._get_soup()
-
+        
     def _get_soup(self):
         # 隨機延遲，模擬人類行為
         time.sleep(random.uniform(1, 3))
@@ -48,95 +43,138 @@ class BookDetailScraper:
 
         return BeautifulSoup(response.text, 'html.parser')
     
+        
+    def set_url(self, url):
+        """設定新的目標 URL 並取得解析的 BeautifulSoup 物件"""
+        self.url = url
+        self.soup = self._get_soup()
+
     def extract_basic_info(self):
         """提取基本書籍資料"""
         try:
-            info_section = self.soup.find('div', class_='type02_p003 clearfix')
-            if not info_section:
-                logging.error("無法找到基本資訊區塊")
-                logging.debug(self.soup)
-                return {}
-
-            info_list = info_section.find('ul')
-            if not info_list:
-                logging.error("無法找到<ul>標籤")
-                return {}
-
             # 書名
-            title = self.soup.find('h1').text.strip() if self.soup.find('h1') else "未知書名"
+            book_name = self.soup.select_one('div.grid_10 h1').text.strip()
+            
+            # 原文書名:此區塊有可能為空
+            ori_book_name = self.soup.select_one('div.grid_10 h2')
+            ori_book_name = ori_book_name.text.strip() if ori_book_name else None
 
-            # 定義要抓取的資料結構
+            # 在type02_p003區塊中尋找基本資訊
+            info_div = self.soup.select_one('div.type02_p003')
+            
+            # 初始化資料字典
             basic_info = {
-                'title': title,
-                'publisher': None,
-                'publication_date': None,
+                'book_name': book_name,
+                'ori_book_name': ori_book_name,
                 'author': None,
+                'ori_author': None,
                 'translator': None,
-                'language': None,
-                'price': None
+                'publisher': None,
+                'publish_date': None,
+                'language': None
             }
-
-            # 從<ul>標籤中提取每個<li>
-            for li in info_list.find_all('li'):
-                if "出版社：" in li.text:
-                    basic_info['publisher'] = li.find('a').text.strip() if li.find('a') else None
-                elif "出版日期：" in li.text:
-                    basic_info['publication_date'] = li.text.replace("出版日期：", "").strip()
-                elif "作者：" in li.text:
-                    basic_info['author'] = li.find('a').text.strip() if li.find('a') else None
-                elif "譯者：" in li.text:
-                    basic_info['translator'] = li.find('a').text.strip() if li.find('a') else None
-                elif "語言：" in li.text:
-                    basic_info['language'] = li.text.replace("語言：", "").strip()
             
-            # 處理價格
-            price_elem = info_section.find('li', class_='price')
-            if price_elem:
-                basic_info['price'] = price_elem.find('strong').text.strip() if price_elem.find('strong') else "未知"
-            
+            # 遍歷所有li元素
+            for li in info_div.select('li'):
+                text = li.get_text(strip=True)
+                
+                if '作者' in text:
+                    # 修改作者提取邏輯：尋找包含 search/query/key/ 的連結
+                    author_link = li.select_one('a[href*="search/query/key/"]')
+                    if author_link:
+                        basic_info['author'] = author_link.text.strip()
+                elif '作者原文' in text:
+                    ori_author_link = li.select_one('a[href*="search/query/key/"]')
+                    if ori_author_link:
+                        basic_info['ori_author'] = author_link.text.strip()
+                elif '譯者' in text:
+                    translator_link = li.select_one('a[href*="search/query/key/"]')
+                    if translator_link:
+                        basic_info['translator'] = translator_link.text.strip()
+                elif '出版社' in text:
+                    basic_info['publisher'] = li.select_one('a span').text.strip()
+                elif '出版日期' in text:
+                    basic_info['publish_date'] = text.split('：')[1].strip()
+                elif '語言' in text:
+                    basic_info['language'] = text.split('：')[1].strip()
+                    
+            logging.info(f"Successfully extracted basic info for book: {book_name}")
             return basic_info
-
+            
         except Exception as e:
-            logging.error(f"提取基本書籍資料時出錯: {str(e)}")
+            logging.error(f"Error extracting basic info: {str(e)}")
             return {}
 
     def extract_detailed_info(self):
         """提取詳細書籍資訊"""
         try:
-            details_section = self.soup.find('div', class_='mod_b type02_m058 clearfix')
-            if not details_section:
-                logging.error("無法找到詳細資訊區塊")
-                return {}
-
-            # 提取詳細資訊
-            detail_info = {}
-            detail_list = details_section.find_all('ul')[0]
-            for li in detail_list.find_all('li'):
-                if "ISBN：" in li.text:
-                    detail_info['ISBN'] = li.text.replace("ISBN：", "").strip()
+            # 找到詳細資料區塊
+            detail_div = self.soup.select_one('div.mod_b.type02_m058')
             
-            # 提取書籍分類
             categories = []
-            category_list = details_section.find('ul', class_='sort')
-            for category in category_list.find_all('li'):
-                category_path = " > ".join([link.text for link in category.find_all('a')])
-                categories.append(category_path)
+            if detail_div:
+                # 尋找所有分類資訊
+                for li in detail_div.select('ul.sort li'):
+                    if '本書分類' in li.text:
+                        # 獲取所有分類連結的文字並用 > 連接
+                        category = ' > '.join([a.text.strip() for a in li.select('a')])
+                        categories.append(category)
             
-            detail_info['categories'] = categories
-
-            return detail_info
-
+            detailed_info = {
+                'categories': categories
+            }
+            
+            logging.info("Successfully extracted detailed info")
+            return detailed_info
+            
         except Exception as e:
-            logging.error(f"提取詳細書籍資料時出錯: {str(e)}")
+            logging.error(f"Error extracting detailed info: {str(e)}")
             return {}
 
+    def extract_price_info(self):
+        """提取價格相關資訊"""
+        try:
+            price_div = self.soup.select_one('div.cnt_prod002 div.prod_cont_b')
+            
+            price_info = {
+                'list_price': '',
+                'sale_price': '',
+                'discount': '',
+                'discount_deadline': ''
+            }
+            
+            if price_div:
+                price_items = price_div.select('ul.price li')
+                for item in price_items:
+                    text = item.get_text(strip=True)
+                    
+                    if '定價' in text:
+                        price_info['list_price'] = item.select_one('em').text.strip()
+                    elif '優惠價' in text:
+                        # 取得折扣率
+                        discount = item.select_one('strong b').text.strip()
+                        price_info['discount'] = f"{discount}折"
+                        
+                        # 取得優惠價格
+                        sale_price = item.select_one('strong.price01 b').text.strip()
+                        price_info['sale_price'] = sale_price
+                    elif '優惠期限' in text:
+                        price_info['discount_deadline'] = text.split('：')[1]
+            
+            logging.info("Successfully extracted price info")
+            return price_info
+            
+        except Exception as e:
+            logging.error(f"Error extracting price info: {str(e)}")
+            return {}
+        
     def get_book_data(self):
         """獲取所有書籍資料"""
         basic_info = self.extract_basic_info()
         detailed_info = self.extract_detailed_info()
-        
+        price_info = self.extract_price_info()
         # 合併所有資訊
-        return {**basic_info, **detailed_info}
+        return {**basic_info, **detailed_info, **price_info}
 
 def main():
     target_urls = [

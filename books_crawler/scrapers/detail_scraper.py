@@ -28,21 +28,59 @@ class BookDetailScraper(BaseScraper):
         except Exception as e:
             self.logger.error(f"提取書籍資訊失敗: {str(e)}")
             return None
+        
+    def extract_category_detail(self):
+        '''提取書籍詳細類別資料'''
+        if not self.soup:
+            self.logger.error("沒有可用的網頁內容")
+            return None
+
+        try:
+            categories = {'detail_category': []}  # 使用 'detail_category' 作為鍵
+            category_list = self.soup.find('ul', class_='sort')
+            
+            if category_list:
+                for li in category_list.find_all('li'):
+                    # 移除 "本書分類：" 文字
+                    li_text = li.get_text(strip=True).replace('本書分類：', '')
+                    
+                    # 分割類別路徑
+                    categories = li_text.split('>')
+                    
+                    # 清理每個類別名稱
+                    categories = [
+                        name.strip().replace('/', '_')
+                        for name in categories
+                    ]
+                    
+                    # 將每個分類名稱列表加入 categories 字典
+                    categories['detail_category'].append(corrected_category_names)
+
+            return categories
+        except Exception as e:
+            print("提取書籍類別資料失敗")
+            self.logger.error(f"提取書籍類別資料失敗: {str(e)}")
+            return None
+
+    
 
 def main(config=None):
     target_urls = [
         "https://www.books.com.tw/products/0011001522?sloc=main",
         "https://www.books.com.tw/products/0010922997?sloc=ms2_6",
+        "https://www.books.com.tw/products/E050238022?loc=P_0004_002",
+        "https://www.books.com.tw/products/0011004550?loc=P_0003_001",
+        "https://www.books.com.tw/products/0011004419?loc=P_0003_001"
     ]
     
-    scraper = BookDetailScraper(config)
     all_books_data = []
-    
     for url in target_urls:
+        scraper = BookDetailScraper(config)
         scraper.set_url(url)
-        book_data = scraper.extract_basic_info()
-        if book_data:
-            all_books_data.append(book_data)
+        book_info_data = scraper.extract_basic_info()
+        book_category_data = scraper.extract_category_detail()
+        if book_info_data:
+            all_books_data.append({**book_info_data, **book_category_data})
     
     timestamp = datetime.now().strftime('%Y%m%d_%H%M')
     scraper.save_data(

@@ -1,9 +1,14 @@
+base_dir: "data"
+output_formats:
+  - json
+  - csv
+
 urls:
   - category: "中文書即時榜"
     url: "https://www.books.com.tw/web/sys_tdrntb/books/"
     frequency: "hourly"
 
-  - category: "動漫/輕小說即時榜"
+  - category: "動漫_輕小說即時榜"
     url: "https://www.books.com.tw/web/sys_tdrntb/bookssub1516/"
     frequency: "hourly"
 
@@ -59,7 +64,7 @@ urls:
     url: "https://www.books.com.tw/web/sys_saletopb/books/11/?attribute=7&loc=P_0002_012"
     frequency: "daily"
 
-  - category: "7日暢銷榜_童書/青少年文學"
+  - category: "7日暢銷榜_童書_青少年文學"
     url: "https://www.books.com.tw/web/sys_saletopb/books/14/?attribute=7&loc=P_0002_013"
     frequency: "daily"
 
@@ -79,7 +84,7 @@ urls:
     url: "https://www.books.com.tw/web/sys_saletopb/books/15/?attribute=7&loc=P_0002_017"
     frequency: "daily"
 
-  - category: "7日暢銷榜_漫畫/圖文書"
+  - category: "7日暢銷榜_漫畫_圖文書"
     url: "https://www.books.com.tw/web/sys_saletopb/books/16/?attribute=7&loc=P_0002_018"
     frequency: "daily"
 
@@ -95,7 +100,7 @@ urls:
     url: "https://www.books.com.tw/web/sys_saletopb/books/19/?attribute=7&loc=P_0002_021"
     frequency: "daily"
 
-  - category: "7日暢銷榜_專業/教科書/政府出版品"
+  - category: "7日暢銷榜_專業_教科書_政府出版品"
     url: "https://www.books.com.tw/web/sys_saletopb/books/20/?attribute=7&loc=P_0002_022"
     frequency: "daily"
 
@@ -147,7 +152,7 @@ urls:
     url: "https://www.books.com.tw/web/sys_saletopb/books/11/?loc=P_0002_012"
     frequency: "daily"
 
-  - category: "30日暢銷榜_童書/青少年文學"
+  - category: "30日暢銷榜_童書_青少年文學"
     url: "https://www.books.com.tw/web/sys_saletopb/books/14/?loc=P_0002_013"
     frequency: "daily"
 
@@ -167,7 +172,7 @@ urls:
     url: "https://www.books.com.tw/web/sys_saletopb/books/15/?loc=P_0002_017"
     frequency: "daily"
 
-  - category: "30日暢銷榜_漫畫/圖文書"
+  - category: "30日暢銷榜_漫畫_圖文書"
     url: "https://www.books.com.tw/web/sys_saletopb/books/16/?loc=P_0002_018"
     frequency: "daily"
 
@@ -183,7 +188,7 @@ urls:
     url: "https://www.books.com.tw/web/sys_saletopb/books/19/?loc=P_0002_021"
     frequency: "daily"
 
-  - category: "30日暢銷榜_專業/教科書/政府出版品"
+  - category: "30日暢銷榜_專業_教科書_政府出版品"
     url: "https://www.books.com.tw/web/sys_saletopb/books/20/?loc=P_0002_022"
     frequency: "daily"
 
@@ -235,7 +240,7 @@ urls:
     url: "https://www.books.com.tw/web/sys_newtopb/books/11/?loc=P_0002_012"
     frequency: "daily"
 
-  - category: "新書榜_童書/青少年文學"
+  - category: "新書榜_童書_青少年文學"
     url: "https://www.books.com.tw/web/sys_newtopb/books/14/?loc=P_0002_013"
     frequency: "daily"
 
@@ -255,7 +260,7 @@ urls:
     url: "https://www.books.com.tw/web/sys_newtopb/books/15/?loc=P_0002_017"
     frequency: "daily"
 
-  - category: "新書榜_漫畫/圖文書"
+  - category: "新書榜_漫畫_圖文書"
     url: "https://www.books.com.tw/web/sys_newtopb/books/16/?loc=P_0002_018"
     frequency: "daily"
 
@@ -271,6 +276,6 @@ urls:
     url: "https://www.books.com.tw/web/sys_newtopb/books/19/?loc=P_0002_021"
     frequency: "daily"
 
-  - category: "新書榜_專業/教科書/政府出版品"
+  - category: "新書榜_專業_教科書_政府出版品"
     url: "https://www.books.com.tw/web/sys_newtopb/books/20/?loc=P_0002_022"
     frequency: "daily"

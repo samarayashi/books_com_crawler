@@ -54,7 +54,7 @@ class BookDetailScraper(BaseScraper):
                     ]
                     
                     # 將每個分類名稱列表加入 categories 字典
-                    categories['detail_category'].append(corrected_category_names)
+                    categories['detail_category'].append(categories)
 
             return categories
         except Exception as e:

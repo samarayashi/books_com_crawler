@@ -1,6 +1,7 @@
 # --------------
 # 本地資料庫
 *.db
+*.csv
 
 # debugger
 launch.json

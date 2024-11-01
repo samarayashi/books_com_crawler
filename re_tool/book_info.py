@@ -1,26 +1,26 @@
-# book_info.py
 import re
 
 class BookInfo:
+    # 將 patterns 設為類別屬性
+    patterns = {
+        "title": r"書名：(.+?)(?=，(?:簡體版書名|原文名稱|語言|ISBN|出版社|作者|譯者|出版日期|類別))",
+        "simplified_title": r"簡體版書名：(.+?)(?=，(?:原文名稱|語言|ISBN|出版社|作者|譯者|出版日期|類別))",
+        "original_title": r"原文名稱：([^，]+)",
+        "language": r"語言：([^，]+)",
+        "isbn": r"ISBN：(\d+)",
+        "pages": r"頁數：(\d+)",
+        "publisher": r"出版社：([^，]+)",
+        "author": r"作者：([^，]+)",
+        "translator": r"譯者：([^，]+)",
+        "publication_date": r"出版日期：([\d/]+)",
+        "category": r"類別：([^，]+)"
+    }
+
     def __init__(self, meta_text=None):
         """
         初始化 BookInfo 類別，並可選擇傳入 meta_text 進行分析。
         """
         self.meta_text = meta_text
-        self.patterns = {
-            "title": r"書名：(.+?)(?=，(?:簡體版書名|原文名稱|語言|ISBN|出版社|作者|譯者|出版日期|類別))",
-            "simplified_title": r"簡體版書名：(.+?)(?=，(?:原文名稱|語言|ISBN|出版社|作者|譯者|出版日期|類別))",
-            "original_title": r"原文名稱：([^，]+)",
-            "language": r"語言：([^，]+)",
-            "isbn": r"ISBN：(\d+)",
-            "pages": r"頁數：(\d+)",
-            "publisher": r"出版社：([^，]+)",
-            "author": r"作者：([^，]+)",
-            "translator": r"譯者：([^，]+)",
-            "publication_date": r"出版日期：([\d/]+)",
-            "category": r"類別：([^，]+)"
-        }
-
 
     def set_meta_text(self, meta_text):
         """

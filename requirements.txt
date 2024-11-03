@@ -1,4 +1,6 @@
-beautifulsoup4>=4.9.3
-requests>=2.25.1
-fake-useragent>=0.1.11
-pyyaml>=5.4.1 
+fastapi>=0.68.0
+uvicorn>=0.15.0
+sqlalchemy>=1.4.23
+pydantic>=1.8.2
+alembic>=1.7.1
+psycopg2-binary>=2.9.1

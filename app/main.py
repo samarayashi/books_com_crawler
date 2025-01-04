@@ -1,13 +1,15 @@
 from fastapi import FastAPI
-from .routers import books
+from .routers import books, admin
 from .database import engine
-from .models import book
+from .models import Base
 
-book.Base.metadata.create_all(bind=engine)
+# 創建所有表格
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Book Crawler API")
 
 app.include_router(books.router)
+app.include_router(admin.router)
 
 @app.get("/")
 def read_root():
